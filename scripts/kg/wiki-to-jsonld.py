@@ -264,8 +264,36 @@ def extract_frontmatter(filepath):
         return None
 
 
+CODE_FENCE_RE = re.compile(r'```.*?```', re.DOTALL)
+INLINE_CODE_RE = re.compile(r'`[^`\n]+`')
+
+
+def _blank_span(m):
+    """Replace a matched span with spaces, preserving newlines."""
+    return ''.join(c if c == '\n' else ' ' for c in m.group(0))
+
+
+def mask_code(content):
+    """Blank out fenced code blocks and inline code spans.
+
+    Illustrative link syntax inside a code fence or code span (e.g. SCHEMA's
+    `up: "[[Parent-Page]]"` frontmatter example) is not a real cross-reference
+    and does not render as a clickable link on GitHub either; without this,
+    the link-extraction regexes below treat it as one anyway and mint a
+    phantom edge to a page that was never meant to exist.
+    """
+    content = CODE_FENCE_RE.sub(_blank_span, content)
+    content = INLINE_CODE_RE.sub(_blank_span, content)
+    return content
+
+
 def strip_body(filepath):
-    """Read a markdown file and return the body with frontmatter stripped."""
+    """Read a markdown file and return the body with frontmatter stripped.
+
+    Fenced code blocks and inline code spans are blanked out (see
+    mask_code) so illustrative syntax examples in prose are never mistaken
+    for real cross-references.
+    """
     try:
         with open(filepath, 'r', encoding='utf-8') as f:
             content = f.read()
@@ -281,7 +309,7 @@ def strip_body(filepath):
         if end != -1:
             content = content[end + 4:]
 
-    return content
+    return mask_code(content)
 
 
 def extract_body_links(filepath):
