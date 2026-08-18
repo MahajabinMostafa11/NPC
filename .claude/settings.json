@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd wiki/NPC.wiki && git status:*)",
+      "Bash(cd wiki/NPC.wiki && git diff:*)",
+      "Bash(cd wiki/NPC.wiki && git log:*)",
+      "Bash(cd wiki/NPC.wiki && git add:*)",
+      "Bash(cd wiki/NPC.wiki && git commit *)",
+      "Bash(git -C wiki/NPC.wiki status:*)",
+      "Bash(git -C wiki/NPC.wiki diff:*)",
+      "Bash(git -C wiki/NPC.wiki log:*)",
+      "Bash(git -C wiki/NPC.wiki add:*)",
+      "Bash(git -C wiki/NPC.wiki commit *)",
+      "Bash(./scripts/kg/build-graph.sh)",
+      "Bash(./wiki/init-wiki.sh)",
+      "Bash(./wiki/init-wiki.sh *)",
+      "Bash(./wiki/agents/claude-code/setup.sh)",
+      "Bash(./wiki/agents/claude-code/setup.sh *)",
+      "Bash(.venv/bin/python *)",
+      "Bash(uv run python *)"
+    ]
+  }
+}
